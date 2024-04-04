@@ -78,6 +78,7 @@ class ConvBlock(nn.Module):
         norm="bn",
         kernel_size=(3, 3),
         dropout_value=0,
+        mp=True,
         **kwargs
     ):
         super().__init__()
@@ -91,15 +92,20 @@ class ConvBlock(nn.Module):
         else:
             raise ValueError("Norm type {} not supported".format(norm))
 
+        if mp:
+            self.mp = nn.MaxPool2d(2, 2)
+        else:
+            self.mp = nn.Identity()
+
         self.conv = nn.Sequential(
             nn.Conv2d(
                 in_channels=in_channels,
                 out_channels=out_channels,
                 kernel_size=kernel_size,
                 bias=False,
-                padding=1
+                padding=1,
             ),
-            nn.MaxPool2d(2, 2),
+            self.mp,
             self.norm(out_channels),
             nn.ReLU(),
             nn.Dropout(dropout_value),

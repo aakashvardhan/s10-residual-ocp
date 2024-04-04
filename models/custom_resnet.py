@@ -10,7 +10,7 @@ torch.manual_seed(1)
 class CustomResNet(nn.Module):
     """
     Custom implementation of the ResNet model.
-    
+
     Args:
         config (dict): Configuration parameters for the model.
             - in_channels (int): Number of input channels.
@@ -27,10 +27,8 @@ class CustomResNet(nn.Module):
         dropout_prob = config["dropout"]
 
         # Prep layer
-        self.prep_layer = nn.Sequential(
-            nn.Conv2d(in_channels, n_channels, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(n_channels),
-            nn.ReLU(),
+        self.prep_layer = ConvBlock(
+            in_channels=in_channels, out_channels=n_channels, mp=False
         )  # output_size = 32, RF = 3
 
         # Layer 1
@@ -53,7 +51,7 @@ class CustomResNet(nn.Module):
         )  # output_size = 4, RF = 27
 
         # Output layer
-        self.mp4 = nn.MaxPool2d(4,4)  # output_size = 1, RF = 35
+        self.mp4 = nn.MaxPool2d(4, 4)  # output_size = 1, RF = 35
         self.fc = nn.Linear(
             n_channels * 8, len(config["classes"])
         )  # output_size = 1, RF = 35
@@ -61,10 +59,10 @@ class CustomResNet(nn.Module):
     def forward(self, x):
         """
         Forward pass of the custom ResNet model.
-        
+
         Args:
             x (torch.Tensor): Input tensor of shape (batch_size, channels, height, width).
-            
+
         Returns:
             torch.Tensor: Output tensor after passing through the model's layers.
         """

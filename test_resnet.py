@@ -104,9 +104,6 @@ if __name__ == "__main__":
     if args.summary:
         config["debug"] = True
         model_summary(model, input_size=(3, 32, 32))
-        assert model.shape == torch.Size(
-            [config["n_channels"], len(config["classes"])]
-        )
 
     if args.sanity:
         test_model_sanity(model)
