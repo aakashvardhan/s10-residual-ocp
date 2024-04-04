@@ -97,7 +97,7 @@ class ConvBlock(nn.Module):
                 out_channels=out_channels,
                 kernel_size=kernel_size,
                 bias=False,
-                **kwargs
+                padding=1
             ),
             nn.MaxPool2d(2, 2),
             self.norm(out_channels),

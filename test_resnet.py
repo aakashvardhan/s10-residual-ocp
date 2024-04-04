@@ -100,7 +100,6 @@ if __name__ == "__main__":
     # Create
     config = get_config()
     config["debug"] = True
-    config["n_channels"] = 38
     model = CustomResNet(config)
 
     if args.summary:

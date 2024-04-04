@@ -53,7 +53,7 @@ class CustomResNet(nn.Module):
         )  # output_size = 4, RF = 27
 
         # Output layer
-        self.mp4 = nn.MaxPool2d(4)  # output_size = 1, RF = 35
+        self.mp4 = nn.MaxPool2d(4,4)  # output_size = 1, RF = 35
         self.fc = nn.Linear(
             n_channels * 8, len(config["classes"])
         )  # output_size = 1, RF = 35
