@@ -37,9 +37,9 @@ def test_model_sanity(model_):
 
     # Create model
     model = model_
-    loss_function = F.nll_loss
-    # Using SGD as the optimizer
-    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    loss_function = F.cross_entropy
+    # Using Adam as the optimizer
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Create data loader
     train_loader = DataLoader(cifar_subset, batch_size=10, shuffle=True)
@@ -99,10 +99,10 @@ if __name__ == "__main__":
 
     # Create
     config = get_config()
-    config["debug"] = True
     model = CustomResNet(config)
 
     if args.summary:
+        config["debug"] = True
         model_summary(model, input_size=(3, 32, 32))
 
     if args.sanity:
