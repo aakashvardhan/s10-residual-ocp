@@ -31,8 +31,26 @@ def sgd_optimizer(model, config, momentum=0.9, weight_decay=0.0):
         torch.optim.SGD: The SGD optimizer for the given model.
     """
     return optim.SGD(
-        model.parameters(), lr=config["lr"], momentum=momentum, weight_decay=weight_decay
+        model.parameters(),
+        lr=config["lr"],
+        momentum=momentum,
+        weight_decay=weight_decay,
     )
+
+
+def adam_optimizer(model, config, weight_decay=0.0):
+    """
+    Returns an Adam optimizer for the given model.
+
+    Args:
+        model (torch.nn.Module): The model for which the optimizer is created.
+        lr (float, optional): The learning rate for the optimizer. Defaults to the value specified in the config.
+        weight_decay (float, optional): The weight decay factor for the optimizer. Defaults to 0.0.
+
+    Returns:
+        torch.optim.Adam: The Adam optimizer for the given model.
+    """
+    return optim.Adam(model.parameters(), lr=config["lr"], weight_decay=weight_decay)
 
 
 def save_model(model, path):
