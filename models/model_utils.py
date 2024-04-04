@@ -17,7 +17,7 @@ def model_summary(model, input_size=(1, 28, 28)):
     summary(model, input_size=input_size)
 
 
-def sgd_optimizer(model, lr=config["lr"], momentum=0.9, weight_decay=0.0):
+def sgd_optimizer(model, config, momentum=0.9, weight_decay=0.0):
     """
     Returns a stochastic gradient descent (SGD) optimizer for the given model.
 
@@ -31,7 +31,7 @@ def sgd_optimizer(model, lr=config["lr"], momentum=0.9, weight_decay=0.0):
         torch.optim.SGD: The SGD optimizer for the given model.
     """
     return optim.SGD(
-        model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay
+        model.parameters(), lr=config["lr"], momentum=momentum, weight_decay=weight_decay
     )
 
 

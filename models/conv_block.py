@@ -75,7 +75,7 @@ class ConvBlock(nn.Module):
         self,
         in_channels,
         out_channels,
-        norm,
+        norm="bn",
         kernel_size=(3, 3),
         dropout_value=0,
         **kwargs
@@ -99,8 +99,9 @@ class ConvBlock(nn.Module):
                 bias=False,
                 **kwargs
             ),
-            nn.ReLU(),
+            nn.MaxPool2d(2, 2),
             self.norm(out_channels),
+            nn.ReLU(),
             nn.Dropout(dropout_value),
         )
 
