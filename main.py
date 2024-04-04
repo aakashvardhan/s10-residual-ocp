@@ -2,7 +2,7 @@ from models.model import CustomResNet
 from models.model_utils import model_summary, adam_optimizer, save_model
 from utils import train, test
 from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, OneCycleLR
-from setup_cifar10_data import setup_cifar10
+from setup_cifar10 import setup_cifar10
 import utils
 from torch_lr_finder import LRFinder
 
@@ -17,9 +17,9 @@ def main(config):
         tuple: A tuple containing the trained model, test data loader, and a list of learning rates.
     """
     train_data, test_data, train_loader, test_loader = setup_cifar10(config)
-    model = Net(config).to(config["device"])
+    model = CustomResNet(config).to(config["device"])
     model_summary(model, input_size=(3, 32, 32))
-    optimizer = sgd_optimizer(model, lr=config["lr"])
+    optimizer = adam_optimizer(model, config)
     scheduler = StepLR(optimizer, step_size=config["step_size"], gamma=0.5)
     lr_plateau = ReduceLROnPlateau(optimizer, mode="min", patience=5, verbose=True)
     lr = []
