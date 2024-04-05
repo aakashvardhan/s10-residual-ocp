@@ -25,17 +25,15 @@ class CIFAR10Dataset(datasets.CIFAR10):
         if transform == "train":
             self.transform = A.Compose(
                 [
-                    A.ShiftScaleRotate(
-                        shift_limit=0.0625, scale_limit=0.2, rotate_limit=15, p=0.3
-                    ),
+                    A.PadIfNeeded(min_height=40, min_width=40, always_apply=True),
                     A.HorizontalFlip(p=0.5),
                     A.CoarseDropout(
                         max_holes=1,
-                        max_height=16,
-                        max_width=16,
+                        max_height=8,
+                        max_width=8,
                         min_holes=1,
-                        min_height=16,
-                        min_width=16,
+                        min_height=8,
+                        min_width=8,
                         fill_value=(0.4914, 0.4822, 0.4465),
                         mask_fill_value=None,
                     ),
