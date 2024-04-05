@@ -1,32 +1,24 @@
-from models.custom_resnet import CustomResNet
-from models.model_utils import model_summary, adam_optimizer, save_model
-from utils import train, test
-from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, OneCycleLR
-from setup_cifar10 import setup_cifar10
-import utils
-from torch_lr_finder import LRFinder
-import torch.nn as nn
+from torch.optim.lr_scheduler import OneCycleLR
+from models.model_utils import save_model
+from utils import test, train
 
-def main(config):
+
+def main(config, model, train_loader, test_loader, optimizer, criterion):
     """
-    Main function for training and testing a model on CIFAR-10 dataset.
+    Main function that trains and tests a model using the given configuration.
 
     Args:
-        config (dict): Configuration parameters for training and testing.
+        config (dict): A dictionary containing the configuration parameters.
+        model: The model to be trained and tested.
+        train_loader: The data loader for the training dataset.
+        test_loader: The data loader for the testing dataset.
+        optimizer: The optimizer used for training the model.
+        criterion: The loss criterion used for training the model.
 
     Returns:
-        tuple: A tuple containing the trained model, test data loader, and a list of learning rates.
+        list: A list containing the learning rates used during training.
     """
-    criterion = nn.CrossEntropyLoss()
-    train_data, test_data, train_loader, test_loader = setup_cifar10(config)
-    model = CustomResNet(config).to(config["device"])
-    model_summary(model, input_size=(3, 32, 32))
-    optimizer = adam_optimizer(model, config)
-    lr_finder = LRFinder(model, optimizer, criterion, device=config["device"])
-    lr_finder.range_test(train_loader, end_lr=10, num_iter=100, step_mode="exp")
-    _, max_lr = lr_finder.plot()  # to inspect the loss-learning rate graph
-    lr_finder.reset()
-    config["max_lr"] = max_lr
+
     ocp_scheduler = OneCycleLR(
         optimizer,
         max_lr=config["max_lr"],
@@ -42,7 +34,7 @@ def main(config):
     for epoch in range(1, config["epochs"] + 1):
         print("EPOCH:", epoch)
         train(model, config["device"], train_loader, optimizer, criterion, epoch)
-        test_loss = test(model, config["device"], test_loader)
+        test(model, config["device"], test_loader)
 
         if config["lr_scheduler"] == "one_cycle":
             ocp_scheduler.step()
@@ -55,4 +47,4 @@ def main(config):
     model_file = "model_" + config["norm"] + ".pth"
     save_model(model, model_file)
 
-    return model, test_loader, lr
+    return lr
