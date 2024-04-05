@@ -22,8 +22,6 @@ def main(config):
     model = CustomResNet(config).to(config["device"])
     model_summary(model, input_size=(3, 32, 32))
     optimizer = adam_optimizer(model, config)
-    scheduler = StepLR(optimizer, step_size=config["step_size"], gamma=0.5)
-    lr_plateau = ReduceLROnPlateau(optimizer, mode="min", patience=5, verbose=True)
     lr_finder = LRFinder(model, optimizer, criterion, device="cuda:0")
     lr_finder.range_test(train_loader, end_lr=10, num_iter=100, step_mode="exp")
     _, max_lr = lr_finder.plot()  # to inspect the loss-learning rate graph
@@ -45,17 +43,9 @@ def main(config):
         print("EPOCH:", epoch)
         train(model, config["device"], train_loader, optimizer, criterion, epoch)
         test_loss = test(model, config["device"], test_loader)
-        if config["lr_scheduler"] == "step_lr":
-            scheduler.step()
-            lr.append(optimizer.param_groups[0]["lr"])
-            print("Learning rate:", optimizer.param_groups[0]["lr"])
 
-        elif config["lr_scheduler"] == "one_cycle":
+        if config["lr_scheduler"] == "one_cycle":
             ocp_scheduler.step()
-            lr.append(optimizer.param_groups[0]["lr"])
-            print("Learning rate:", optimizer.param_groups[0]["lr"])
-        elif config["lr_scheduler"] == "plateau":
-            lr_plateau.step(utils.test_losses[-1])
             lr.append(optimizer.param_groups[0]["lr"])
             print("Learning rate:", optimizer.param_groups[0]["lr"])
         elif config["lr_scheduler"] == "none":
