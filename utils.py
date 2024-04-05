@@ -5,6 +5,7 @@ import os
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
+
 def set_seeds(seed: int = 42):
     """Set seeds for reproducibility."""
     np.random.seed(seed)
@@ -22,7 +23,7 @@ train_acc = []
 test_acc = []
 
 
-def train(model, device, train_loader, optimizer,criterion, ocp_scheduler,epoch):
+def train(model, device, train_loader, optimizer, criterion, ocp_scheduler, epoch):
     """
     Trains the model on the training data for one epoch.
 
@@ -75,8 +76,8 @@ def train(model, device, train_loader, optimizer,criterion, ocp_scheduler,epoch)
         )
         ocp_scheduler.step()
         train_acc.append(100 * correct / processed)
-        lrs = ocp_scheduler.get_last_lr()
-        print(f"Max Learning Rate: {max(lrs)}")
+    lrs = ocp_scheduler.get_last_lr()
+    print(f"Max Learning Rate: {max(lrs)}")
 
 
 def test(model, device, test_loader):
