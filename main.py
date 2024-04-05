@@ -22,7 +22,7 @@ def main(config):
     model = CustomResNet(config).to(config["device"])
     model_summary(model, input_size=(3, 32, 32))
     optimizer = adam_optimizer(model, config)
-    lr_finder = LRFinder(model, optimizer, criterion, device="cuda:0")
+    lr_finder = LRFinder(model, optimizer, criterion, device=config["device"])
     lr_finder.range_test(train_loader, end_lr=10, num_iter=100, step_mode="exp")
     _, max_lr = lr_finder.plot()  # to inspect the loss-learning rate graph
     lr_finder.reset()
