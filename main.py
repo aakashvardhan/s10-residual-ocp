@@ -1,4 +1,4 @@
-from models.model import CustomResNet
+from models.custom_resnet import CustomResNet
 from models.model_utils import model_summary, adam_optimizer, save_model
 from utils import train, test
 from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, OneCycleLR
