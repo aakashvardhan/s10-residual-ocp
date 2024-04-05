@@ -38,7 +38,7 @@ def sgd_optimizer(model, config, momentum=0.9, weight_decay=0.0):
     )
 
 
-def adam_optimizer(model, config, weight_decay=0.0):
+def adam_optimizer(model, config, weight_decay=1e-4):
     """
     Returns an Adam optimizer for the given model.
 

@@ -22,7 +22,7 @@ train_acc = []
 test_acc = []
 
 
-def train(model, device, train_loader, optimizer,criterion, epoch):
+def train(model, device, train_loader, optimizer,criterion, ocp_scheduler,epoch):
     """
     Trains the model on the training data for one epoch.
 
@@ -73,7 +73,10 @@ def train(model, device, train_loader, optimizer,criterion, epoch):
         pbar.set_description(
             desc=f"Loss={loss.item()} Batch_id={batch_idx} Accuracy={100*correct/processed:0.2f}"
         )
+        ocp_scheduler.step()
         train_acc.append(100 * correct / processed)
+        lrs = ocp_scheduler.get_last_lr()
+        print(f"Max Learning Rate: {max(lrs)}")
 
 
 def test(model, device, test_loader):

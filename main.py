@@ -33,15 +33,16 @@ def main(config, model, train_loader, test_loader, optimizer, criterion):
     lr = []
     for epoch in range(1, config["epochs"] + 1):
         print("EPOCH:", epoch)
-        train(model, config["device"], train_loader, optimizer, criterion, epoch)
+        train(
+            model,
+            config["device"],
+            train_loader,
+            optimizer,
+            criterion,
+            ocp_scheduler=ocp_scheduler,
+            epoch=epoch,
+        )
         test(model, config["device"], test_loader)
-
-        if config["lr_scheduler"] == "one_cycle":
-            ocp_scheduler.step()
-            lr.append(optimizer.param_groups[0]["lr"])
-            print("Learning rate:", optimizer.param_groups[0]["lr"])
-        elif config["lr_scheduler"] == "none":
-            continue
 
     # format name of model file according to config['norm']
     model_file = "model_" + config["norm"] + ".pth"
